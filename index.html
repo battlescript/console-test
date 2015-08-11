@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Battlescript editor</title>
+<style type="text/css" media="screen">
+    #editor { 
+      height: 300px;
+      width: 600px;
+    }
+
+
+</style>
+</head>
+<body>
+
+<div id="editor" ></div>
+    
+<h1>Console</h1>
+<div id="debugDiv">
+</div>
+
+<script src="ace.js" type="text/javascript" charset="utf-8"></script>
+
+<button type="button" id="eval">Evaluate Code</button>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script>
+    var editor1 = ace.edit("editor");
+    editor1.setTheme("ace/theme/monokai");
+    editor1.getSession().setMode("ace/mode/javascript");
+
+
+    if (typeof console  != "undefined") 
+        if (typeof console.log != 'undefined')
+            console.olog = console.log;
+        else
+            console.olog = function() {};
+
+    console.log = function(message) {
+        console.olog(message);
+        $('#debugDiv').append('<p>' + message + '</p>');
+    };
+
+    console.error = console.debug = console.info =  console.log;
+
+
+    $('#eval').on('click', function(){
+      $('#debugDiv').empty();
+      var code = editor1.getValue();
+      var script = document.createElement('script');
+
+      try {
+        script.appendChild(document.createTextNode(code));
+        document.body.appendChild(script);
+      } catch (e) {
+        script.text = code;
+        document.body.appendChild(script);
+      }
+
+    });
+
+</script>
+
+
+</body>
+</html>
